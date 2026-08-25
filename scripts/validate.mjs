@@ -28,6 +28,7 @@ async function main() {
 
   for (const path of [
     "plugins/roxybrowser/bin/lib/bootstrap-config.mjs",
+    "plugins/roxybrowser/bin/lib/openapi-launcher.mjs",
     "plugins/roxybrowser/bin/roxybrowser-openapi-mcp",
     "plugins/roxybrowser/bin/roxybrowser-openapi-mcp.cmd",
     "plugins/roxybrowser/bin/roxybrowser-playwright-mcp",

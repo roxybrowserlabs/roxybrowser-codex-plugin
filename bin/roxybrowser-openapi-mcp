@@ -1,16 +1,43 @@
 #!/usr/bin/env node
-import { existsSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { spawn } from "node:child_process";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { bootstrapRoxyEnv } from "./lib/bootstrap-config.mjs";
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const entry = resolve(root, "node_modules/@roxybrowser/openapi/lib/cli.js");
+async function main() {
+  try {
+    await bootstrapRoxyEnv(process.env);
 
-if (!existsSync(entry)) {
-  console.error("Missing @roxybrowser/openapi. Run `npm install` in the plugin directory.");
-  process.exit(1);
+    const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+    const launcher = join(root, "bin/lib/openapi-launcher.mjs");
+    const childArgs = [
+      "-y",
+      "--package",
+      "@roxybrowser/openapi@3.0.1",
+      "node",
+      launcher,
+      ...process.argv.slice(2),
+    ];
+    const code = await new Promise((resolvePromise, rejectPromise) => {
+      const child = spawn(
+        "npx",
+        childArgs,
+        {
+          cwd: root,
+          env: process.env,
+          stdio: "inherit",
+        },
+      );
+
+      child.on("error", rejectPromise);
+      child.on("close", (exitCode) => resolvePromise(exitCode ?? 1));
+    });
+
+    process.exitCode = code;
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  }
 }
 
-await bootstrapRoxyEnv(process.env);
-await import(pathToFileURL(entry).href);
+await main();
