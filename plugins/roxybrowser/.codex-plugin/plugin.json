@@ -19,8 +19,8 @@
     "category": "Productivity",
     "capabilities": ["Interactive", "Read", "Write"],
     "websiteURL": "https://www.roxybrowser.com/",
-    "privacyPolicyURL": "https://www.roxybrowser.com/privacy",
-    "termsOfServiceURL": "https://www.roxybrowser.com/terms",
+    "privacyPolicyURL": "https://roxybrowser.cn/copyright/privacy",
+    "termsOfServiceURL": "https://roxybrowser.cn/copyright/user",
     "composerIcon": "./assets/logo.svg",
     "logo": "./assets/logo.svg",
     "defaultPrompt": [
