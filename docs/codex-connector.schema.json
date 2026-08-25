@@ -4,7 +4,7 @@
   "title": "RoxyBrowser Codex Connector",
   "type": "object",
   "additionalProperties": false,
-  "required": ["version", "apiHost", "workspaceId", "token", "permissions"],
+  "required": ["apiHost", "workspaceId", "apiKey"],
   "properties": {
     "version": {
       "const": 1
@@ -20,6 +20,10 @@
         { "type": "number" }
       ]
     },
+    "apiKey": {
+      "type": "string",
+      "minLength": 1
+    },
     "token": {
       "type": "string",
       "minLength": 1
@@ -31,6 +35,12 @@
     "expiresAt": {
       "type": "string",
       "format": "date-time"
+    },
+    "timeout": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        { "type": "number" }
+      ]
     },
     "permissions": {
       "type": "object",

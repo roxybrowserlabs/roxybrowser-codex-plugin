@@ -47,9 +47,9 @@ In a marketplace install, the plugin does not require a local `node_modules` fol
 
 Default config path:
 
-- macOS: `~/Library/Application Support/RoxyBrowser/codex-oauth.json`
-- Windows: `%APPDATA%/RoxyBrowser/codex-oauth.json`
-- Linux: `~/.config/roxybrowser/codex-oauth.json`
+- `~/.roxy-agent/state/codex-oauth.json`
+
+Set `ROXY_CODEX_CONFIG_PATH` only when you need to override this path manually.
 
 ## Codex Plugin
 

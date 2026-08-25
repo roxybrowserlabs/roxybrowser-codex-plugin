@@ -59,9 +59,9 @@ async function readConfigFile(configPath) {
 
   const parsed = JSON.parse(await readFile(configPath, "utf8"));
   const apiKey = pickString(parsed, ["apiKey", "token", "api_key"]);
-  const workspaceId = pickString(parsed, ["workspaceId", "workspace_id"]);
+  const workspaceId = pickConfigValue(parsed, ["workspaceId", "workspace_id"]);
   const apiHost = pickString(parsed, ["apiHost", "api_host"]);
-  const timeout = pickString(parsed, ["timeout"]);
+  const timeout = pickConfigValue(parsed, ["timeout"]);
 
   if (!apiKey || !workspaceId) {
     return null;
@@ -97,15 +97,7 @@ async function openOAuthUrl(url) {
 }
 
 function defaultConfigPath() {
-  if (platform() === "darwin") {
-    return join(homedir(), "Library", "Application Support", "RoxyBrowser", chooseConfigName());
-  }
-
-  if (platform() === "win32") {
-    return join(process.env.APPDATA ?? join(homedir(), "AppData", "Roaming"), "RoxyBrowser", chooseConfigName());
-  }
-
-  return join(homedir(), ".config", "roxybrowser", chooseConfigName());
+  return join(homedir(), ".roxy-agent", "state", chooseConfigName());
 }
 
 function chooseConfigName() {
@@ -113,10 +105,18 @@ function chooseConfigName() {
 }
 
 function pickString(obj, keys) {
+  const value = pickConfigValue(obj, keys);
+  return value === null ? null : String(value);
+}
+
+function pickConfigValue(obj, keys) {
   for (const key of keys) {
     const value = obj?.[key];
     if (typeof value === "string" && value.trim()) {
       return value.trim();
+    }
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return String(value);
     }
   }
   return null;

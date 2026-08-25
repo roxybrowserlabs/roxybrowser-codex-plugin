@@ -23,15 +23,13 @@ roxybrowser://codex/oauth
 
 ## Default config file path
 
-The plugin wrapper will look for the first existing file in this order:
+The plugin wrapper will look for:
 
 ```text
-macOS:  ~/Library/Application Support/RoxyBrowser/codex-oauth.json
-Windows: %APPDATA%/RoxyBrowser/codex-oauth.json
-Linux:   ~/.config/roxybrowser/codex-oauth.json
+~/.roxy-agent/state/codex-oauth.json
 ```
 
-`ROXY_CODEX_CONFIG_PATH` can override this path for testing.
+RoxyBrowser should resolve this path through `@roxy/shared/agent-paths`. `ROXY_CODEX_CONFIG_PATH` can override this path for manual testing.
 
 ## Accepted JSON keys
 

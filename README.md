@@ -47,9 +47,9 @@ If `ROXY_API_KEY` and `ROXY_WORKSPACE_ID` are missing, the OpenAPI wrapper opens
 
 Default config path:
 
-- macOS: `~/Library/Application Support/RoxyBrowser/codex-oauth.json`
-- Windows: `%APPDATA%/RoxyBrowser/codex-oauth.json`
-- Linux: `~/.config/roxybrowser/codex-oauth.json`
+- `~/.roxy-agent/state/codex-oauth.json`
+
+Set `ROXY_CODEX_CONFIG_PATH` only when you need to override this path manually.
 
 ## Codex Plugin
 
