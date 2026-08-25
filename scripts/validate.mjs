@@ -9,7 +9,7 @@ async function main() {
 
   const plugin = await readJson("plugins/roxybrowser/.codex-plugin/plugin.json");
   assert(plugin.name === "roxybrowser", "plugin name must be roxybrowser");
-  assert(plugin.version === "0.1.1", "plugin version must be 0.1.1");
+  assert(plugin.version === "0.1.2", "plugin version must be 0.1.2");
   assert(plugin.skills === "./skills/", "plugin skills path must be ./skills/");
   assert(plugin.mcpServers === "./.mcp.json", "plugin mcpServers path must be ./.mcp.json");
   assert(plugin.interface?.displayName === "RoxyBrowser", "plugin displayName must be RoxyBrowser");
@@ -33,6 +33,7 @@ async function main() {
     "plugins/roxybrowser/bin/roxybrowser-openapi-mcp.cmd",
     "plugins/roxybrowser/bin/roxybrowser-playwright-mcp",
     "plugins/roxybrowser/bin/roxybrowser-playwright-mcp.cmd",
+    "plugins/roxybrowser/assets/logo.svg",
     "plugins/roxybrowser/docs/roxybrowser-oauth-bootstrap.md",
     "plugins/roxybrowser/skills/roxybrowser-control/SKILL.md",
     "plugins/roxybrowser/skills/roxybrowser-automation/SKILL.md",

@@ -1,6 +1,6 @@
 {
   "name": "roxybrowser",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Use the public RoxyBrowser OpenAPI and Playwright MCP servers from Codex.",
   "author": {
     "name": "RoxyBrowser"
@@ -21,6 +21,8 @@
     "websiteURL": "https://www.roxybrowser.com/",
     "privacyPolicyURL": "https://www.roxybrowser.com/privacy",
     "termsOfServiceURL": "https://www.roxybrowser.com/terms",
+    "composerIcon": "./assets/logo.svg",
+    "logo": "./assets/logo.svg",
     "defaultPrompt": [
       "List my RoxyBrowser profiles",
       "Open a RoxyBrowser profile and inspect this site",
