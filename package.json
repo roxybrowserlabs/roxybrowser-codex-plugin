@@ -1,6 +1,6 @@
 {
   "name": "@roxybrowser/codex-plugin",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Codex plugin wrapper for the RoxyBrowser OpenAPI and Playwright MCP servers with OAuth bootstrap.",
   "type": "module",
   "license": "MIT",
@@ -13,6 +13,7 @@
     ".mcp.json",
     "bin/",
     "docs/",
+    "assets/",
     "skills/",
     "README.md",
     "LICENSE"
