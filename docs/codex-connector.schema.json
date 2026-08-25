@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.roxybrowser.com/schemas/codex-connector.schema.json",
+  "title": "RoxyBrowser Codex Connector",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "apiHost", "workspaceId", "token", "permissions"],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "apiHost": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://(127(?:\\.[0-9]{1,3}){3}|localhost|\\[::1\\])(?::[0-9]+)?/?$"
+    },
+    "workspaceId": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        { "type": "number" }
+      ]
+    },
+    "token": {
+      "type": "string",
+      "minLength": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "profiles": {
+          "$ref": "#/$defs/permissionList"
+        },
+        "proxies": {
+          "$ref": "#/$defs/permissionList"
+        },
+        "accounts": {
+          "$ref": "#/$defs/permissionList"
+        },
+        "browser": {
+          "$ref": "#/$defs/permissionList"
+        },
+        "scripts": {
+          "$ref": "#/$defs/permissionList"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "permissionList": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  }
+}

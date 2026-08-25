@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+import { spawn } from "node:child_process";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+async function main() {
+  const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+  const childArgs = ["-y", "--package", "@roxybrowser/playwright@2.0.5", "roxybrowser-mcp", ...process.argv.slice(2)];
+  const code = await new Promise((resolvePromise, rejectPromise) => {
+    const child = spawn(
+      "npx",
+      childArgs,
+      {
+        cwd: root,
+        env: process.env,
+        stdio: "inherit",
+      },
+    );
+
+    child.on("error", rejectPromise);
+    child.on("close", (exitCode) => resolvePromise(exitCode ?? 1));
+  });
+
+  process.exitCode = code;
+}
+
+await main();

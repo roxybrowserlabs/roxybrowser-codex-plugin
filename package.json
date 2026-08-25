@@ -1,0 +1,34 @@
+{
+  "name": "@roxybrowser/codex-plugin",
+  "version": "0.1.0",
+  "description": "Codex plugin wrapper for the RoxyBrowser OpenAPI and Playwright MCP servers with OAuth bootstrap.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "roxybrowser-openapi-mcp": "./bin/roxybrowser-openapi-mcp",
+    "roxybrowser-playwright-mcp": "./bin/roxybrowser-playwright-mcp"
+  },
+  "files": [
+    ".codex-plugin/",
+    ".mcp.json",
+    "bin/",
+    "docs/",
+    "skills/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "npm run validate",
+    "typecheck": "npm run validate",
+    "test": "npm run smoke",
+    "validate": "node scripts/validate.mjs",
+    "smoke": "node scripts/smoke-test.mjs"
+  },
+  "dependencies": {
+    "@roxybrowser/openapi": "^3.0.1",
+    "@roxybrowser/playwright": "^2.0.5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "roxybrowser",
+  "version": "0.1.0",
+  "description": "Use the public RoxyBrowser OpenAPI and Playwright MCP servers from Codex.",
+  "author": {
+    "name": "RoxyBrowser"
+  },
+  "homepage": "https://www.roxybrowser.com/",
+  "repository": "https://github.com/roxybrowser/roxybrowser-codex-plugin",
+  "license": "MIT",
+  "keywords": ["roxybrowser", "browser", "mcp", "codex", "automation"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "RoxyBrowser",
+    "shortDescription": "Use RoxyBrowser profiles from Codex",
+    "longDescription": "Use RoxyBrowser profiles, proxies, platform accounts, and real browser automation sessions from Codex through the public @roxybrowser/openapi and @roxybrowser/playwright MCP packages.",
+    "developerName": "RoxyBrowser",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://www.roxybrowser.com/",
+    "privacyPolicyURL": "https://www.roxybrowser.com/copyright/privacy",
+    "termsOfServiceURL": "https://www.roxybrowser.com/copyright/user",
+    "defaultPrompt": [
+      "List my RoxyBrowser profiles",
+      "Open a RoxyBrowser profile and inspect this site",
+      "Create a browser profile with a proxy"
+    ],
+    "brandColor": "#1EA7FD"
+  }
+}

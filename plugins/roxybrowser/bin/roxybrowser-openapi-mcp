@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+import { spawn } from "node:child_process";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { bootstrapRoxyEnv } from "./lib/bootstrap-config.mjs";
+
+async function main() {
+  try {
+    await bootstrapRoxyEnv(process.env);
+
+    const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+    const childArgs = ["-y", "--package", "@roxybrowser/openapi@3.0.1", "roxybrowser-openapi-mcp", ...process.argv.slice(2)];
+    const code = await new Promise((resolvePromise, rejectPromise) => {
+      const child = spawn(
+        "npx",
+        childArgs,
+        {
+          cwd: root,
+          env: process.env,
+          stdio: "inherit",
+        },
+      );
+
+      child.on("error", rejectPromise);
+      child.on("close", (exitCode) => resolvePromise(exitCode ?? 1));
+    });
+
+    process.exitCode = code;
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  }
+}
+
+await main();

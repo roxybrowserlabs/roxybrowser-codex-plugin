@@ -1,0 +1,20 @@
+{
+  "name": "roxybrowser-local",
+  "interface": {
+    "displayName": "RoxyBrowser"
+  },
+  "plugins": [
+    {
+      "name": "roxybrowser",
+      "source": {
+        "source": "local",
+        "path": "./plugins/roxybrowser"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+import { existsSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { bootstrapRoxyEnv } from "./lib/bootstrap-config.mjs";
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const entry = resolve(root, "node_modules/@roxybrowser/openapi/lib/cli.js");
+
+if (!existsSync(entry)) {
+  console.error("Missing @roxybrowser/openapi. Run `npm install` in the plugin directory.");
+  process.exit(1);
+}
+
+await bootstrapRoxyEnv(process.env);
+await import(pathToFileURL(entry).href);
