@@ -1,7 +1,7 @@
 {
   "name": "roxybrowser",
   "version": "0.1.3",
-  "description": "Use the public RoxyBrowser OpenAPI and Playwright MCP servers from Codex.",
+  "description": "Use the public RoxyBrowser OpenAPI CLI and Playwright MCP servers from Codex.",
   "author": {
     "name": "RoxyBrowser"
   },
@@ -14,7 +14,7 @@
   "interface": {
     "displayName": "RoxyBrowser",
     "shortDescription": "Use RoxyBrowser profiles from Codex",
-    "longDescription": "Use RoxyBrowser profiles, proxies, platform accounts, and real browser automation sessions from Codex through the public @roxybrowser/openapi and @roxybrowser/playwright MCP packages.",
+    "longDescription": "Use RoxyBrowser profiles, proxies, platform accounts, and real browser automation sessions from Codex through the public @roxybrowser/openapi CLI/MCP and @roxybrowser/playwright packages.",
     "developerName": "RoxyBrowser",
     "category": "Productivity",
     "capabilities": ["Interactive", "Read", "Write"],

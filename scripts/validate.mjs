@@ -14,6 +14,9 @@ async function main() {
   assert(plugin.mcpServers === "./.mcp.json", "plugin mcpServers path must be ./.mcp.json");
   assert(plugin.interface?.displayName === "RoxyBrowser", "plugin displayName must be RoxyBrowser");
 
+  const packageJson = await readJson("package.json");
+  assert(packageJson.dependencies?.["@roxybrowser/openapi"] === "3.1.0-beta.0", "OpenAPI dependency must be pinned to 3.1.0-beta.0");
+
   const mcp = await readJson("plugins/roxybrowser/.mcp.json");
   assert(mcp.mcpServers?.roxybrowserOpenapi, "missing roxybrowserOpenapi MCP server");
   assert(mcp.mcpServers?.roxybrowserPlaywright, "missing roxybrowserPlaywright MCP server");
@@ -36,14 +39,43 @@ async function main() {
     "plugins/roxybrowser/assets/logo.png",
     "plugins/roxybrowser/assets/logo.svg",
     "plugins/roxybrowser/docs/roxybrowser-oauth-bootstrap.md",
-    "plugins/roxybrowser/skills/roxybrowser-control/SKILL.md",
     "plugins/roxybrowser/skills/roxybrowser-automation/SKILL.md",
-    "plugins/roxybrowser/skills/roxybrowser-script-writing/SKILL.md",
+    "plugins/roxybrowser/skills/roxybrowser-automation/references/playwright-cli.md",
+    "plugins/roxybrowser/skills/roxybrowser-openapi-cli/SKILL.md",
+    "plugins/roxybrowser/skills/roxybrowser-openapi-cli/references/workflows.md",
+    "plugins/roxybrowser/skills/roxybrowser-openapi-cli/references/tool-reference.md",
+    "plugins/roxybrowser/skills/roxybrowser-openapi-cli/references/browser-guidance.md",
+    "plugins/roxybrowser/skills/roxybrowser-openapi-cli/references/browser-advanced-fields.md",
+    "plugins/roxybrowser/skills/roxybrowser-openapi-cli/references/fingerprint-fields.md",
+    "plugins/roxybrowser/skills/roxybrowser-openapi-cli/references/fingerprint-interface-languages.md",
+    "plugins/roxybrowser/skills/roxybrowser-openapi-cli/references/fingerprint-languages.md",
+    "plugins/roxybrowser/skills/roxybrowser-openapi-cli/references/fingerprint-resolutions.md",
+    "plugins/roxybrowser/skills/roxybrowser-openapi-cli/references/fingerprint-timezones.md",
+    "plugins/roxybrowser/skills/roxybrowser-openapi-cli/references/proxy-guidance.md",
     "plugins/roxybrowser/docs/codex-connector.schema.json",
     "plugins/roxybrowser/README.md",
     "plugins/roxybrowser/LICENSE",
   ]) {
     await access(join(root, path));
+  }
+
+  const cliSkillFiles = [
+    "SKILL.md",
+    "references/browser-advanced-fields.md",
+    "references/browser-guidance.md",
+    "references/fingerprint-fields.md",
+    "references/fingerprint-interface-languages.md",
+    "references/fingerprint-languages.md",
+    "references/fingerprint-resolutions.md",
+    "references/fingerprint-timezones.md",
+    "references/proxy-guidance.md",
+    "references/tool-reference.md",
+    "references/workflows.md",
+  ];
+  for (const path of cliSkillFiles) {
+    const source = await readFile(join(root, "skills/roxybrowser-openapi-cli", path), "utf8");
+    const published = await readFile(join(root, "plugins/roxybrowser/skills/roxybrowser-openapi-cli", path), "utf8");
+    assert(source === published, `CLI skill source and published copy differ: ${path}`);
   }
 
   console.log("Plugin wrapper files validated.");

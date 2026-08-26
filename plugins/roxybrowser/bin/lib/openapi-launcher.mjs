@@ -1,12 +1,13 @@
 import { access, realpath } from "node:fs/promises";
 import { constants } from "node:fs";
+import { spawn } from "node:child_process";
 import { delimiter, dirname, join } from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const OPENAPI_BIN = process.platform === "win32" ? "roxybrowser-openapi-mcp.cmd" : "roxybrowser-openapi-mcp";
 
 async function main() {
-  const openapi = await loadOpenapiPackage();
+  const { module: openapi, entry } = await loadOpenapiPackage();
   const command = process.argv[2];
 
   if (command === "version") {
@@ -29,7 +30,8 @@ async function main() {
   }
 
   if (command && command !== "browser" && command !== "--browser") {
-    throw new Error(`Unsupported roxybrowser-openapi-mcp command in Codex wrapper: ${command}`);
+    await runOfficialCli(entry, process.argv.slice(2));
+    return;
   }
 
   const roxy = readRoxyOptions();
@@ -43,7 +45,11 @@ async function main() {
 
 async function loadOpenapiPackage() {
   try {
-    return await import("@roxybrowser/openapi");
+    const resolved = await import.meta.resolve("@roxybrowser/openapi");
+    return {
+      module: await import(resolved),
+      entry: fileURLToPath(new URL("./cli.js", resolved)),
+    };
   } catch (error) {
     if (error?.code !== "ERR_MODULE_NOT_FOUND") {
       throw error;
@@ -51,7 +57,29 @@ async function loadOpenapiPackage() {
   }
 
   const packageRoot = await findOpenapiPackageRootFromPath();
-  return await import(pathToFileURL(join(packageRoot, "lib/index.js")).href);
+  const entry = join(packageRoot, "lib/index.js");
+  return {
+    module: await import(pathToFileURL(entry).href),
+    entry: join(packageRoot, "lib/cli.js"),
+  };
+}
+
+function runOfficialCli(entry, args) {
+  return new Promise((resolvePromise, rejectPromise) => {
+    const child = spawn(process.execPath, [entry, ...args], {
+      cwd: process.cwd(),
+      env: process.env,
+      stdio: "inherit",
+    });
+    child.on("error", rejectPromise);
+    child.on("close", (code) => {
+      if (code && code !== 0) {
+        rejectPromise(new Error(`@roxybrowser/openapi CLI exited with code ${code}`));
+        return;
+      }
+      resolvePromise();
+    });
+  });
 }
 
 async function findOpenapiPackageRootFromPath() {

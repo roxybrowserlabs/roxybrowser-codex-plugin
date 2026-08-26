@@ -6,17 +6,20 @@ import { bootstrapRoxyEnv } from "./lib/bootstrap-config.mjs";
 
 async function main() {
   try {
-    await bootstrapRoxyEnv(process.env);
+    const args = process.argv.slice(2);
+    if (!isCredentialFreeCommand(args)) {
+      await bootstrapRoxyEnv(process.env);
+    }
 
     const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
     const launcher = join(root, "bin/lib/openapi-launcher.mjs");
     const childArgs = [
       "-y",
       "--package",
-      "@roxybrowser/openapi@3.0.1",
+      "@roxybrowser/openapi@3.1.0-beta.0",
       "node",
       launcher,
-      ...process.argv.slice(2),
+      ...args,
     ];
     const code = await new Promise((resolvePromise, rejectPromise) => {
       const child = spawn(
@@ -38,6 +41,14 @@ async function main() {
     console.error(error instanceof Error ? error.message : String(error));
     process.exitCode = 1;
   }
+}
+
+function isCredentialFreeCommand(args) {
+  return args.includes("--help")
+    || args.includes("-h")
+    || args[0] === "help"
+    || args[0] === "version"
+    || args[0] === "supports";
 }
 
 await main();

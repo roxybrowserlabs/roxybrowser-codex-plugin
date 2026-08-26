@@ -16,6 +16,29 @@ const version = await run(join(pluginRoot, "bin/roxybrowser-openapi-mcp"), ["ver
   ROXY_TIMEOUT: "30000",
 });
 console.log(version.trim());
+if (!version.includes("3.1.0-beta.0")) {
+  throw new Error("OpenAPI wrapper did not resolve 3.1.0-beta.0.");
+}
+
+const help = await run(join(pluginRoot, "bin/roxybrowser-openapi-mcp"), ["--help"], {
+  HOME: "/tmp/roxybrowser-codex-plugin-smoke-no-config",
+});
+for (const command of ["call", "sdk", "api", "supports"]) {
+  if (!help.includes(command)) {
+    throw new Error(`OpenAPI CLI help did not expose ${command}.`);
+  }
+}
+console.log("OpenAPI wrapper forwarded official CLI help.");
+
+const toolHelp = await run(join(pluginRoot, "bin/roxybrowser-openapi-mcp"), ["help", "tools"], {
+  HOME: "/tmp/roxybrowser-codex-plugin-smoke-no-config",
+});
+for (const marker of ["Browser MCP tools:", "roxy_profile_list", "call roxy_profile_list"]) {
+  if (!toolHelp.includes(marker)) {
+    throw new Error(`OpenAPI CLI help tools did not expose ${marker}.`);
+  }
+}
+console.log("OpenAPI CLI exposed the Agent-facing browser tool catalog.");
 console.log("@roxybrowser/playwright MCP wrapper resolved.");
 
 const tools = await listMcpTools(join(pluginRoot, "bin/roxybrowser-openapi-mcp"), {
