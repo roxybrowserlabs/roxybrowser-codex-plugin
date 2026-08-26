@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "roxybrowserOpenapi": {
-      "command": "./bin/roxybrowser-openapi-mcp",
-      "args": [],
+      "command": "npx",
+      "args": ["-y", "@roxybrowser/openapi@3.1.1"],
       "cwd": ".",
       "env_vars": [
         "ROXY_API_HOST",
@@ -10,7 +10,6 @@
         "ROXY_WORKSPACE_ID",
         "ROXY_TIMEOUT",
         "ROXY_CODEX_CONFIG_PATH",
-        "ROXY_CODEX_OAUTH_URL",
         "HOME",
         "USERPROFILE",
         "APPDATA",
@@ -21,8 +20,8 @@
       "tool_timeout_sec": 3600
     },
     "roxybrowserPlaywright": {
-      "command": "./bin/roxybrowser-playwright-mcp",
-      "args": [],
+      "command": "npx",
+      "args": ["-y", "--package", "@roxybrowser/playwright@2.0.5", "roxybrowser-mcp"],
       "cwd": ".",
       "env_vars": [
         "PLAYWRIGHT_MCP_OUTPUT_DIR",

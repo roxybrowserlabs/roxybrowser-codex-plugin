@@ -9,33 +9,34 @@ async function main() {
 
   const plugin = await readJson("plugins/roxybrowser/.codex-plugin/plugin.json");
   assert(plugin.name === "roxybrowser", "plugin name must be roxybrowser");
-  assert(plugin.version === "0.1.4", "plugin version must be 0.1.4");
+  assert(plugin.version === "0.1.5", "plugin version must be 0.1.5");
   assert(plugin.skills === "./skills/", "plugin skills path must be ./skills/");
   assert(plugin.mcpServers === "./.mcp.json", "plugin mcpServers path must be ./.mcp.json");
   assert(plugin.interface?.displayName === "RoxyBrowser", "plugin displayName must be RoxyBrowser");
 
   const packageJson = await readJson("package.json");
-  assert(packageJson.dependencies?.["@roxybrowser/openapi"] === "3.1.0", "OpenAPI dependency must be pinned to 3.1.0");
+  assert(packageJson.dependencies?.["@roxybrowser/openapi"] === undefined, "OpenAPI must run directly through npx");
 
   const mcp = await readJson("plugins/roxybrowser/.mcp.json");
   assert(mcp.mcpServers?.roxybrowserOpenapi, "missing roxybrowserOpenapi MCP server");
   assert(mcp.mcpServers?.roxybrowserPlaywright, "missing roxybrowserPlaywright MCP server");
   assert(
-    mcp.mcpServers.roxybrowserOpenapi.command === "./bin/roxybrowser-openapi-mcp",
-    "openapi server must use the explicit plugin wrapper",
+    mcp.mcpServers.roxybrowserOpenapi.command === "npx",
+    "openapi server must run directly through npx",
   );
   assert(
-    mcp.mcpServers.roxybrowserPlaywright.command === "./bin/roxybrowser-playwright-mcp",
-    "playwright server must use the explicit plugin wrapper",
+    JSON.stringify(mcp.mcpServers.roxybrowserOpenapi.args) ===
+      JSON.stringify(["-y", "@roxybrowser/openapi@3.1.1"]),
+    "openapi server must pin the published 3.1.1 CLI",
+  );
+  assert(mcp.mcpServers.roxybrowserPlaywright.command === "npx", "playwright server must run directly through npx");
+  assert(
+    JSON.stringify(mcp.mcpServers.roxybrowserPlaywright.args) ===
+      JSON.stringify(["-y", "--package", "@roxybrowser/playwright@2.0.5", "roxybrowser-mcp"]),
+    "playwright server must pin the published 2.0.5 CLI",
   );
 
   for (const path of [
-    "plugins/roxybrowser/bin/lib/bootstrap-config.mjs",
-    "plugins/roxybrowser/bin/lib/openapi-launcher.mjs",
-    "plugins/roxybrowser/bin/roxybrowser-openapi-mcp",
-    "plugins/roxybrowser/bin/roxybrowser-openapi-mcp.cmd",
-    "plugins/roxybrowser/bin/roxybrowser-playwright-mcp",
-    "plugins/roxybrowser/bin/roxybrowser-playwright-mcp.cmd",
     "plugins/roxybrowser/assets/logo.png",
     "plugins/roxybrowser/assets/logo.svg",
     "plugins/roxybrowser/docs/roxybrowser-oauth-bootstrap.md",
@@ -78,7 +79,7 @@ async function main() {
     assert(source === published, `CLI skill source and published copy differ: ${path}`);
   }
 
-  console.log("Plugin wrapper files validated.");
+  console.log("Plugin files validated.");
 }
 
 async function readJson(path) {

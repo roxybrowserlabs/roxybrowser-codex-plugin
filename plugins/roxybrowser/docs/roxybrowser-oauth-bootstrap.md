@@ -1,44 +1,30 @@
-# RoxyBrowser OAuth Bootstrap Contract
+# RoxyBrowser OAuth File Contract
 
-This document describes the only RoxyBrowser-side work required for the current Codex plugin wrapper flow.
-
-The plugin does not implement a new MCP server. It uses:
-
-- `@roxybrowser/openapi`
-- `@roxybrowser/playwright`
-
-The wrapper starts `@roxybrowser/openapi` by reading either environment variables or a local config file. If both are missing, it opens:
-
-```text
-roxybrowser://codex/oauth
-```
+The Codex plugin starts `@roxybrowser/openapi` directly through `npx`. The
+published CLI reads either its connection environment variables or a local
+JSON file written by RoxyBrowser.
 
 ## Required RoxyBrowser behavior
 
-1. Register `roxybrowser://` as a system URL scheme.
-2. Handle the `codex/oauth` path.
-3. Open a local RoxyBrowser page or modal for OAuth/bootstrap.
-4. After success, write a local JSON config file.
-5. Make sure the file is readable by the current user only.
+1. Complete the RoxyBrowser login and workspace selection in the desktop app.
+2. Write the local JSON config file after authorization succeeds.
+3. Restrict the file to the current user.
+4. Refresh the Codex plugin after the file changes.
 
 ## Default config file path
 
-The plugin wrapper will look for:
+The OpenAPI CLI reads:
 
 ```text
 ~/.roxy-agent/state/codex-oauth.json
 ```
 
-RoxyBrowser should resolve this path through `@roxy/shared/agent-paths`. `ROXY_CODEX_CONFIG_PATH` can override this path for manual testing.
+RoxyBrowser should resolve this path through `@roxy/shared/agent-paths`.
+`ROXY_CODEX_CONFIG_PATH` can override it for manual testing.
 
 ## Accepted JSON keys
 
-The wrapper accepts any of these key names:
-
-- `apiKey`, `token`, `api_key`
-- `workspaceId`, `workspace_id`
-- `apiHost`, `api_host`
-- `timeout`
+The CLI accepts `apiKey`, `workspaceId`, `apiHost`, and `timeout`.
 
 Minimal example:
 
@@ -53,25 +39,18 @@ Minimal example:
 
 ## Recommended App flow
 
-1. User opens `roxybrowser://codex/oauth`.
-2. RoxyBrowser shows a local setup/auth page.
-3. User completes login or enters the needed values.
-4. RoxyBrowser writes `codex-oauth.json`.
-5. User re-runs Codex or reloads the plugin.
+1. RoxyBrowser shows its local setup/auth page.
+2. The user completes login and selects a workspace.
+3. RoxyBrowser writes `codex-oauth.json`.
+4. The user reloads the Codex plugin.
 
 ## What the plugin does next
 
-On launch, the wrapper reads the config file and exports:
-
-- `ROXY_API_KEY`
-- `ROXY_WORKSPACE_ID`
-- `ROXY_API_HOST`
-- `ROXY_TIMEOUT`
-
-Then it starts the published MCP packages unchanged.
+Codex runs `npx -y @roxybrowser/openapi@3.1.1`. The CLI reads the JSON file
+itself. Explicit CLI options and the corresponding `ROXY_*` environment
+variables take precedence over file values.
 
 ## Do not do
 
-- Do not change `@roxybrowser/openapi` or `@roxybrowser/playwright` for this bootstrap path.
 - Do not require the user to paste secrets into Codex chat.
 - Do not depend on a post-install hook that Codex does not expose.

@@ -1,15 +1,12 @@
-import { access } from "node:fs/promises";
-import { constants } from "node:fs";
 import { join } from "node:path";
 import { spawn } from "node:child_process";
 
 const root = process.cwd();
 const pluginRoot = join(root, "plugins/roxybrowser");
 
-await access(join(pluginRoot, "bin/roxybrowser-openapi-mcp"), constants.R_OK);
-await access(join(pluginRoot, "bin/roxybrowser-playwright-mcp"), constants.R_OK);
-
-const version = await run(join(pluginRoot, "bin/roxybrowser-openapi-mcp"), ["version"], {
+const openapiCommand = "npx";
+const openapiArgs = ["-y", "@roxybrowser/openapi@3.1.1"];
+const version = await run(openapiCommand, [...openapiArgs, "version"], {
   ROXY_API_KEY: "smoke-test-key",
   ROXY_WORKSPACE_ID: "smoke-workspace",
   ROXY_API_HOST: "http://127.0.0.1:50000",
@@ -17,11 +14,11 @@ const version = await run(join(pluginRoot, "bin/roxybrowser-openapi-mcp"), ["ver
 });
 console.log(version.trim());
 const packageVersion = JSON.parse(version).packageVersion;
-if (packageVersion !== "3.1.0") {
-  throw new Error("OpenAPI wrapper did not resolve 3.1.0.");
+if (packageVersion !== "3.1.1") {
+  throw new Error("OpenAPI CLI did not resolve 3.1.1.");
 }
 
-const help = await run(join(pluginRoot, "bin/roxybrowser-openapi-mcp"), ["--help"], {
+const help = await run(openapiCommand, [...openapiArgs, "--help"], {
   HOME: "/tmp/roxybrowser-codex-plugin-smoke-no-config",
 });
 for (const command of ["call", "sdk", "api", "supports"]) {
@@ -29,9 +26,9 @@ for (const command of ["call", "sdk", "api", "supports"]) {
     throw new Error(`OpenAPI CLI help did not expose ${command}.`);
   }
 }
-console.log("OpenAPI wrapper forwarded official CLI help.");
+console.log("OpenAPI CLI exposed its direct command help.");
 
-const toolHelp = await run(join(pluginRoot, "bin/roxybrowser-openapi-mcp"), ["help", "tools"], {
+const toolHelp = await run(openapiCommand, [...openapiArgs, "help", "tools"], {
   HOME: "/tmp/roxybrowser-codex-plugin-smoke-no-config",
 });
 for (const marker of ["Browser MCP tools:", "roxy_profile_list", "call roxy_profile_list"]) {
@@ -40,9 +37,18 @@ for (const marker of ["Browser MCP tools:", "roxy_profile_list", "call roxy_prof
   }
 }
 console.log("OpenAPI CLI exposed the Agent-facing browser tool catalog.");
-console.log("@roxybrowser/playwright MCP wrapper resolved.");
 
-const tools = await listMcpTools(join(pluginRoot, "bin/roxybrowser-openapi-mcp"), {
+const playwrightTools = await listMcpTools(
+  "npx",
+  ["-y", "--package", "@roxybrowser/playwright@2.0.5", "roxybrowser-mcp"],
+  {},
+);
+if (!playwrightTools.some((tool) => tool.name === "roxy_browser_connect")) {
+  throw new Error("roxy_browser_connect was not exposed by the Playwright MCP server.");
+}
+console.log(`Playwright MCP exposed ${playwrightTools.length} tools including roxy_browser_connect.`);
+
+const tools = await listMcpTools(openapiCommand, openapiArgs, {
   ROXY_API_KEY: "smoke-test-key",
   ROXY_WORKSPACE_ID: "116613",
   ROXY_API_HOST: "http://127.0.0.1:50000",
@@ -79,9 +85,9 @@ function run(command, args, extraEnv = {}) {
   });
 }
 
-function listMcpTools(command, extraEnv = {}) {
+function listMcpTools(command, args, extraEnv = {}) {
   return new Promise((resolve, reject) => {
-    const child = spawn(command, [], {
+    const child = spawn(command, args, {
       cwd: pluginRoot,
       env: { ...process.env, ...extraEnv },
       stdio: ["pipe", "pipe", "pipe"],

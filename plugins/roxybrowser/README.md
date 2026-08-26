@@ -1,8 +1,8 @@
 # RoxyBrowser Codex Plugin
 
-This plugin is the publishable Codex package for RoxyBrowser. It does not implement a new MCP server. It wraps the existing public RoxyBrowser packages for Codex and documents both MCP and direct CLI use:
+This plugin is the publishable Codex package for RoxyBrowser. It does not implement a new MCP server. It configures the existing public RoxyBrowser packages for Codex and documents both MCP and direct CLI use:
 
-- `@roxybrowser/openapi@3.1.0`: RoxyBrowser workspace, project, profile, proxy, and platform-account MCP tools plus Agent-friendly `help`/`call`, lower-level `sdk`, and raw `api` CLI calls.
+- `@roxybrowser/openapi@3.1.1`: RoxyBrowser workspace, project, profile, proxy, and platform-account MCP tools plus Agent-friendly `help`/`call`, lower-level `sdk`, and raw `api` CLI calls.
 - `@roxybrowser/playwright`: browser automation MCP tools for real browser sessions plus a CLI for starting stdio or HTTP MCP transports.
 
 The RoxyBrowser desktop app remains the product surface for OAuth bootstrap, local service status, and future one-click Codex setup.
@@ -18,7 +18,6 @@ Optional:
 - `ROXY_API_HOST`, default `http://127.0.0.1:50000`
 - `ROXY_TIMEOUT`, default `30000`
 - `ROXY_CODEX_CONFIG_PATH`
-- `ROXY_CODEX_OAUTH_URL`, default `roxybrowser://codex/oauth`
 - `PLAYWRIGHT_MCP_OUTPUT_DIR`
 - `PLAYWRIGHT_MCP_ALLOWED_HOSTS`
 - `PLAYWRIGHT_MCP_ALLOWED_ORIGINS`
@@ -35,37 +34,23 @@ npm run validate
 npm run smoke
 ```
 
-The plugin wrapper starts the package-owned MCP servers through explicit paths:
+The plugin starts the published package CLIs directly through `npx`:
 
 ```bash
-./bin/roxybrowser-openapi-mcp version
-./bin/roxybrowser-playwright-mcp
+npx -y @roxybrowser/openapi version
+npx -y --package @roxybrowser/playwright@2.0.5 roxybrowser-mcp
 ```
 
-The OpenAPI wrapper also forwards official CLI subcommands:
+The OpenAPI CLI reads `~/.roxy-agent/state/codex-oauth.json` itself. An empty
+`env | grep ROXY_` result does not indicate a missing RoxyBrowser login. Test
+the saved credentials through a real direct call:
 
 ```bash
-./bin/roxybrowser-openapi-mcp call roxy_profile_list '{"page":1,"pageSize":20}'
-./bin/roxybrowser-openapi-mcp help roxy_profile_open
-./bin/roxybrowser-openapi-mcp sdk profiles.list '{"page":1,"pageSize":20}'
-./bin/roxybrowser-openapi-mcp api GET /browser/list '{"page_index":1,"page_size":20}'
-./bin/roxybrowser-openapi-mcp supports browser.profile.open 4.0.4
+npx -y @roxybrowser/openapi call roxy_profile_list '{}'
 ```
 
-The OpenAPI wrapper reads `~/.roxy-agent/state/codex-oauth.json` before launching
-the child CLI and exports its values as `ROXY_API_KEY`, `ROXY_WORKSPACE_ID`,
-`ROXY_API_HOST`, and `ROXY_TIMEOUT`. Therefore, an empty `env | grep ROXY_`
-result in the calling shell does not indicate a missing RoxyBrowser login.
-Test through the wrapper, for example:
-
-```bash
-./bin/roxybrowser-openapi-mcp call roxy_profile_list '{}'
-```
-
-If the environment variables and bootstrap file are both unavailable, the
-wrapper opens the OAuth bootstrap URL and reports the expected config path.
-
-In a marketplace install, the plugin does not require a local `node_modules` folder. The wrappers call the published `@roxybrowser/openapi` and `@roxybrowser/playwright` packages through `npx`.
+In a marketplace install, the plugin does not require a local `node_modules`
+folder. Codex runs both published packages directly through `npx`.
 
 Default config path:
 
@@ -83,13 +68,13 @@ The MCP config starts two servers:
 {
   "mcpServers": {
     "roxybrowserOpenapi": {
-      "command": "./bin/roxybrowser-openapi-mcp",
-      "args": [],
+      "command": "npx",
+      "args": ["-y", "@roxybrowser/openapi@3.1.1"],
       "cwd": "."
     },
     "roxybrowserPlaywright": {
-      "command": "./bin/roxybrowser-playwright-mcp",
-      "args": [],
+      "command": "npx",
+      "args": ["-y", "--package", "@roxybrowser/playwright@2.0.5", "roxybrowser-mcp"],
       "cwd": "."
     }
   }
@@ -103,12 +88,7 @@ Use the already-published packages directly if the Codex plugin marketplace flow
 OpenAPI/profile tools:
 
 ```bash
-codex mcp add roxybrowser-openapi \
-  --env ROXY_API_KEY=YOUR_API_KEY \
-  --env ROXY_API_HOST=http://127.0.0.1:50000 \
-  --env ROXY_TIMEOUT=30000 \
-  --env ROXY_WORKSPACE_ID=19744 \
-  -- npx -y @roxybrowser/openapi@3.1.0 roxybrowser-openapi-mcp
+codex mcp add roxybrowser-openapi -- npx -y @roxybrowser/openapi@3.1.1
 ```
 
 Browser automation tools:
@@ -123,11 +103,11 @@ codex mcp add roxybrowser-playwright \
 Use OpenAPI directly for one-off SDK or raw endpoint calls without registering an MCP server:
 
 ```bash
-npx -y @roxybrowser/openapi@3.1.0 help tools
-npx -y @roxybrowser/openapi@3.1.0 call roxy_profile_list '{"page":1,"pageSize":20}'
-npx -y @roxybrowser/openapi@3.1.0 call roxy_profile_open '{"dirId":"PROFILE_ID"}'
-npx -y @roxybrowser/openapi@3.1.0 sdk profiles.list '{"page":1,"pageSize":20}'
-npx -y @roxybrowser/openapi@3.1.0 api POST /browser/new_feature '{"dirId":"PROFILE_ID"}'
+npx -y @roxybrowser/openapi help tools
+npx -y @roxybrowser/openapi call roxy_profile_list '{"page":1,"pageSize":20}'
+npx -y @roxybrowser/openapi call roxy_profile_open '{"dirId":"PROFILE_ID"}'
+npx -y @roxybrowser/openapi sdk profiles.list '{"page":1,"pageSize":20}'
+npx -y @roxybrowser/openapi api POST /browser/new_feature '{"dirId":"PROFILE_ID"}'
 ```
 
 The Playwright CLI starts an MCP transport; browser actions remain MCP tool calls:

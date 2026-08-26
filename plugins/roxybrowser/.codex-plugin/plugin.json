@@ -1,6 +1,6 @@
 {
   "name": "roxybrowser",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Use the public RoxyBrowser OpenAPI CLI and Playwright MCP servers from Codex.",
   "author": {
     "name": "RoxyBrowser"
