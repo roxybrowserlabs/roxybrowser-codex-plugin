@@ -13,8 +13,7 @@ The RoxyBrowser desktop app remains the product surface for OAuth bootstrap, loc
 
 - Node.js 24.11.0 or newer (required by `@roxybrowser/openapi` 3.x)
 - RoxyBrowser local API running on loopback
-- `ROXY_API_KEY` or a local bootstrap file written by RoxyBrowser
-- `ROXY_WORKSPACE_ID`
+- `ROXY_API_KEY` and `ROXY_WORKSPACE_ID`, or the local bootstrap file written by RoxyBrowser
 
 Optional:
 
@@ -55,7 +54,18 @@ The OpenAPI wrapper also forwards official CLI subcommands:
 ./bin/roxybrowser-openapi-mcp supports browser.profile.open 4.0.4
 ```
 
-If `ROXY_API_KEY` and `ROXY_WORKSPACE_ID` are missing, the OpenAPI wrapper opens the OAuth bootstrap URL and then reads a local config file on the next launch.
+The OpenAPI wrapper reads `~/.roxy-agent/state/codex-oauth.json` before launching
+the child CLI and exports its values as `ROXY_API_KEY`, `ROXY_WORKSPACE_ID`,
+`ROXY_API_HOST`, and `ROXY_TIMEOUT`. Therefore, an empty `env | grep ROXY_`
+result in the calling shell does not indicate a missing RoxyBrowser login.
+Test through the wrapper, for example:
+
+```bash
+./bin/roxybrowser-openapi-mcp call roxy_profile_list '{}'
+```
+
+If the environment variables and bootstrap file are both unavailable, the
+wrapper opens the OAuth bootstrap URL and reports the expected config path.
 
 Default config path:
 

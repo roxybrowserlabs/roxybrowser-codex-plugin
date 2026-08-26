@@ -5,6 +5,38 @@ description: Use when an agent must run the published @roxybrowser/openapi@3.1.0
 
 # RoxyBrowser OpenAPI CLI
 
+## Credential Bootstrap
+
+The Codex plugin wrapper loads credentials before starting the published CLI.
+It reads `~/.roxy-agent/state/codex-oauth.json` by default (or the path in
+`ROXY_CODEX_CONFIG_PATH`) and exports `ROXY_API_KEY`, `ROXY_WORKSPACE_ID`,
+`ROXY_API_HOST`, and `ROXY_TIMEOUT` to the child process.
+
+An empty result from a shell command such as `env | grep ROXY_` is expected
+when credentials are stored in that JSON file. `env` only reports variables
+already present in the current shell; it does not read RoxyBrowser state.
+Do not conclude that authorization is missing from that output alone. Test
+the wrapper or the CLI call instead, without printing the API key:
+
+```bash
+./bin/roxybrowser-openapi-mcp help tools
+./bin/roxybrowser-openapi-mcp call roxy_profile_list '{}'
+```
+
+For a path-specific diagnostic, use:
+
+```bash
+ROXY_CODEX_CONFIG_PATH="$HOME/.roxy-agent/state/codex-oauth.json" \
+  ./bin/roxybrowser-openapi-mcp call roxy_profile_list '{}'
+```
+
+If the wrapper succeeds but the Codex conversation still reports missing
+credentials, check which integration supplied the tools. A message naming
+`Com.roxybrowser.app` refers to the desktop-app integration and may not be
+using this plugin's wrapper. Restart or refresh the RoxyBrowser Codex plugin,
+then retry with the `roxybrowserOpenapi` tools. For direct `npx` calls, the
+wrapper is bypassed, so pass the CLI flags or environment variables yourself.
+
 ## Core Rule
 
 Run the stable published package as:
