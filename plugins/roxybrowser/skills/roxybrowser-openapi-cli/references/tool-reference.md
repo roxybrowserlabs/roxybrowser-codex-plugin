@@ -1,6 +1,6 @@
 # Public Browser Tool Reference
 
-Run `npx -y @roxybrowser/openapi@3.1.0-beta.0 help tools` for the current catalog and `help <tool-name>` for the exact input schema. Execute a tool with `call <tool-name> '<args-json>'`.
+Run `npx -y @roxybrowser/openapi@3.1.0 help tools` for the current catalog and `help <tool-name>` for the exact input schema. Execute a tool with `call <tool-name> '<args-json>'`.
 
 ## Workspace, Project, And Labels
 

@@ -1,6 +1,6 @@
 # CLI Tool Workflows
 
-Tool names below are passed after `npx -y @roxybrowser/openapi@3.1.0-beta.0 call`. Use `help <tool-name>` to inspect the current input schema before calling an unfamiliar tool.
+Tool names below are passed after `npx -y @roxybrowser/openapi@3.1.0 call`. Use `help <tool-name>` to inspect the current input schema before calling an unfamiliar tool.
 
 ## Find Workspace And Project Context
 

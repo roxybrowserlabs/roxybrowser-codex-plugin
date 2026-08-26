@@ -1,6 +1,6 @@
 ---
 name: roxybrowser-openapi-cli
-description: Use when an agent must run the published @roxybrowser/openapi@3.1.0-beta.0 CLI from a shell to discover and call RoxyBrowser browser tools. 
+description: Use when an agent must run the published @roxybrowser/openapi@3.1.0 CLI from a shell to discover and call RoxyBrowser browser tools.
 ---
 
 # RoxyBrowser OpenAPI CLI
@@ -42,7 +42,7 @@ wrapper is bypassed, so pass the CLI flags or environment variables yourself.
 Run the stable published package as:
 
 ```bash
-npx -y @roxybrowser/openapi@3.1.0-beta.0 <subcommand>
+npx -y @roxybrowser/openapi@3.1.0 <subcommand>
 ```
 
 Do not append `roxybrowser-openapi-mcp` or a prerelease tag. Running the CLI without a subcommand starts the long-running MCP stdio server; direct Agent work should use a finite subcommand.
@@ -52,7 +52,7 @@ Do not append `roxybrowser-openapi-mcp` or a prerelease tag. Running the CLI wit
 `call` is the main interface for this Skill:
 
 ```bash
-npx -y @roxybrowser/openapi@3.1.0-beta.0 call <tool-name> '<args-json>' \
+npx -y @roxybrowser/openapi@3.1.0 call <tool-name> '<args-json>' \
   --api-key "YOUR_API_KEY" --workspace-id 19744
 ```
 
@@ -68,13 +68,13 @@ Prefer `call` for normal operations. Do not copy an original API field name into
 4. Read the formatted text result and use IDs/endpoints returned by that result for the next call.
 
 ```bash
-npx -y @roxybrowser/openapi@3.1.0-beta.0 help tools
-npx -y @roxybrowser/openapi@3.1.0-beta.0 help roxy_profile_create
-npx -y @roxybrowser/openapi@3.1.0-beta.0 call roxy_workspace_list '{}' \
+npx -y @roxybrowser/openapi@3.1.0 help tools
+npx -y @roxybrowser/openapi@3.1.0 help roxy_profile_create
+npx -y @roxybrowser/openapi@3.1.0 call roxy_workspace_list '{}' \
   --api-key "YOUR_API_KEY"
-npx -y @roxybrowser/openapi@3.1.0-beta.0 call roxy_profile_list '{"page":1,"pageSize":20}' \
+npx -y @roxybrowser/openapi@3.1.0 call roxy_profile_list '{"page":1,"pageSize":20}' \
   --api-key "YOUR_API_KEY" --workspace-id 19744
-npx -y @roxybrowser/openapi@3.1.0-beta.0 call roxy_profile_open '{"dirId":"profile-1"}' \
+npx -y @roxybrowser/openapi@3.1.0 call roxy_profile_open '{"dirId":"profile-1"}' \
   --api-key "YOUR_API_KEY" --workspace-id 19744
 ```
 

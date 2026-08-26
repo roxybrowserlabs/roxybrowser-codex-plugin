@@ -16,8 +16,9 @@ const version = await run(join(pluginRoot, "bin/roxybrowser-openapi-mcp"), ["ver
   ROXY_TIMEOUT: "30000",
 });
 console.log(version.trim());
-if (!version.includes("3.1.0-beta.0")) {
-  throw new Error("OpenAPI wrapper did not resolve 3.1.0-beta.0.");
+const packageVersion = JSON.parse(version).packageVersion;
+if (packageVersion !== "3.1.0") {
+  throw new Error("OpenAPI wrapper did not resolve 3.1.0.");
 }
 
 const help = await run(join(pluginRoot, "bin/roxybrowser-openapi-mcp"), ["--help"], {

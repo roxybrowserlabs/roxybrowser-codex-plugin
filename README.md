@@ -4,7 +4,7 @@ This repository is a Codex plugin marketplace root. The publishable plugin lives
 
 It does not implement a new MCP server. It packages the existing public RoxyBrowser packages for Codex and documents both MCP and direct CLI use:
 
-- `@roxybrowser/openapi@3.1.0-beta.0`: RoxyBrowser workspace, project, profile, proxy, and platform-account MCP tools plus Agent-friendly `help`/`call`, lower-level `sdk`, and raw `api` CLI calls.
+- `@roxybrowser/openapi@3.1.0`: RoxyBrowser workspace, project, profile, proxy, and platform-account MCP tools plus Agent-friendly `help`/`call`, lower-level `sdk`, and raw `api` CLI calls.
 - `@roxybrowser/playwright`: browser automation MCP tools for real browser sessions plus a CLI for starting stdio or HTTP MCP transports.
 
 The RoxyBrowser desktop app remains the product surface for OAuth bootstrap, local service status, and future one-click Codex setup.
@@ -108,7 +108,7 @@ codex mcp add roxybrowser-openapi \
   --env ROXY_API_HOST=http://127.0.0.1:50000 \
   --env ROXY_TIMEOUT=30000 \
   --env ROXY_WORKSPACE_ID=19744 \
-  -- npx -y @roxybrowser/openapi@3.1.0-beta.0 roxybrowser-openapi-mcp
+  -- npx -y @roxybrowser/openapi@3.1.0 roxybrowser-openapi-mcp
 ```
 
 Browser automation tools:
@@ -123,11 +123,11 @@ codex mcp add roxybrowser-playwright \
 Use OpenAPI directly for one-off SDK or raw endpoint calls without registering an MCP server:
 
 ```bash
-npx -y @roxybrowser/openapi@3.1.0-beta.0 help tools
-npx -y @roxybrowser/openapi@3.1.0-beta.0 call roxy_profile_list '{"page":1,"pageSize":20}'
-npx -y @roxybrowser/openapi@3.1.0-beta.0 call roxy_profile_open '{"dirId":"PROFILE_ID"}'
-npx -y @roxybrowser/openapi@3.1.0-beta.0 sdk profiles.list '{"page":1,"pageSize":20}'
-npx -y @roxybrowser/openapi@3.1.0-beta.0 api POST /browser/new_feature '{"dirId":"PROFILE_ID"}'
+npx -y @roxybrowser/openapi@3.1.0 help tools
+npx -y @roxybrowser/openapi@3.1.0 call roxy_profile_list '{"page":1,"pageSize":20}'
+npx -y @roxybrowser/openapi@3.1.0 call roxy_profile_open '{"dirId":"PROFILE_ID"}'
+npx -y @roxybrowser/openapi@3.1.0 sdk profiles.list '{"page":1,"pageSize":20}'
+npx -y @roxybrowser/openapi@3.1.0 api POST /browser/new_feature '{"dirId":"PROFILE_ID"}'
 ```
 
 The Playwright CLI starts an MCP transport; browser actions remain MCP tool calls:

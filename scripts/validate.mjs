@@ -9,13 +9,13 @@ async function main() {
 
   const plugin = await readJson("plugins/roxybrowser/.codex-plugin/plugin.json");
   assert(plugin.name === "roxybrowser", "plugin name must be roxybrowser");
-  assert(plugin.version === "0.1.3", "plugin version must be 0.1.3");
+  assert(plugin.version === "0.1.4", "plugin version must be 0.1.4");
   assert(plugin.skills === "./skills/", "plugin skills path must be ./skills/");
   assert(plugin.mcpServers === "./.mcp.json", "plugin mcpServers path must be ./.mcp.json");
   assert(plugin.interface?.displayName === "RoxyBrowser", "plugin displayName must be RoxyBrowser");
 
   const packageJson = await readJson("package.json");
-  assert(packageJson.dependencies?.["@roxybrowser/openapi"] === "3.1.0-beta.0", "OpenAPI dependency must be pinned to 3.1.0-beta.0");
+  assert(packageJson.dependencies?.["@roxybrowser/openapi"] === "3.1.0", "OpenAPI dependency must be pinned to 3.1.0");
 
   const mcp = await readJson("plugins/roxybrowser/.mcp.json");
   assert(mcp.mcpServers?.roxybrowserOpenapi, "missing roxybrowserOpenapi MCP server");
