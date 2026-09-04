@@ -1,0 +1,4 @@
+interface:
+  display_name: "RoxyBrowser Playwright CLI"
+  short_description: "Automate Chrome CDP or Firefox BiDi"
+  default_prompt: "Use $roxybrowser-playwright-cli to automate this browser workflow through an existing CDP or BiDi endpoint."

@@ -3,7 +3,7 @@
 This plugin is the publishable Codex package for RoxyBrowser. It does not implement a new MCP server. It configures the existing public RoxyBrowser packages for Codex and documents both MCP and direct CLI use:
 
 - `@roxybrowser/openapi@3.1.1`: RoxyBrowser workspace, project, profile, proxy, and platform-account MCP tools plus Agent-friendly `help`/`call`, lower-level `sdk`, and raw `api` CLI calls.
-- `@roxybrowser/playwright`: browser automation MCP tools for real browser sessions plus a CLI for starting stdio or HTTP MCP transports.
+- `@roxybrowser/playwright@2.0.6-beta.4`: endpoint-first browser automation CLI for real browser sessions. The plugin also keeps the `2.0.5` MCP transport for existing Codex MCP tool compatibility.
 
 The RoxyBrowser desktop app remains the product surface for OAuth bootstrap, local service status, and future one-click Codex setup.
 
@@ -18,7 +18,8 @@ Optional:
 - `ROXY_API_HOST`, default `http://127.0.0.1:50000`
 - `ROXY_TIMEOUT`, default `30000`
 - `ROXY_CODEX_CONFIG_PATH`
-- `PLAYWRIGHT_MCP_OUTPUT_DIR`
+- `ROXY_CDP_ENDPOINT`, `ROXY_BIDI_ENDPOINT`
+- `PLAYWRIGHT_MCP_OUTPUT_DIR` (legacy MCP transport)
 - `PLAYWRIGHT_MCP_ALLOWED_HOSTS`
 - `PLAYWRIGHT_MCP_ALLOWED_ORIGINS`
 - `PLAYWRIGHT_MCP_BLOCKED_ORIGINS`
@@ -38,7 +39,7 @@ The plugin starts the published package CLIs directly through `npx`:
 
 ```bash
 npx -y @roxybrowser/openapi version
-npx -y --package @roxybrowser/playwright@2.0.5 roxybrowser-mcp
+npx -y @roxybrowser/playwright@2.0.6-beta.4 help
 ```
 
 The OpenAPI CLI reads `~/.roxy-agent/state/codex-oauth.json` itself. An empty
@@ -95,7 +96,7 @@ Browser automation tools:
 
 ```bash
 codex mcp add roxybrowser-playwright \
-  -- npx -y --package @roxybrowser/playwright@latest roxybrowser-mcp
+  -- npx -y --package @roxybrowser/playwright@2.0.5 roxybrowser-mcp
 ```
 
 ## Direct CLI
@@ -110,12 +111,19 @@ npx -y @roxybrowser/openapi sdk profiles.list '{"page":1,"pageSize":20}'
 npx -y @roxybrowser/openapi api POST /browser/new_feature '{"dirId":"PROFILE_ID"}'
 ```
 
-The Playwright CLI starts an MCP transport; browser actions remain MCP tool calls:
+Use the Playwright CLI for direct browser actions after obtaining a CDP or BiDi
+endpoint from the profile tools. The named session keeps state between commands:
 
 ```bash
-npx -y --package @roxybrowser/playwright@latest roxybrowser-mcp
-npx -y --package @roxybrowser/playwright@latest roxybrowser-mcp --transport http --port 3333 --path /mcp
+npx -y @roxybrowser/playwright@2.0.6-beta.4 -s=work --cdp <endpoint> open https://example.com
+npx -y @roxybrowser/playwright@2.0.6-beta.4 -s=work snapshot
+npx -y @roxybrowser/playwright@2.0.6-beta.4 -s=work click e12
+npx -y @roxybrowser/playwright@2.0.6-beta.4 -s=work close
 ```
+
+The beta CLI is endpoint-first: it does not select profiles or launch the
+browser. For the legacy MCP transport, use the pinned `2.0.5` configuration
+above.
 
 ## Tool Ownership
 
