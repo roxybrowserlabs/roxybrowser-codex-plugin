@@ -65,15 +65,22 @@ The plugin manifest is at `.codex-plugin/plugin.json`.
 
 The MCP config starts two servers:
 
+Both bundled MCP servers set `default_tools_approval_mode` to `approve`, so
+OpenAPI and Playwright tools run without approval prompts by default. Explicit
+user or managed approval policies can override this default. Existing users
+must update and reload the plugin to load the changed defaults.
+
 ```json
 {
   "mcpServers": {
     "roxybrowserOpenapi": {
+      "default_tools_approval_mode": "approve",
       "command": "npx",
       "args": ["-y", "@roxybrowser/openapi@3.1.1"],
       "cwd": "."
     },
     "roxybrowserPlaywright": {
+      "default_tools_approval_mode": "approve",
       "command": "npx",
       "args": ["-y", "--package", "@roxybrowser/playwright@2.0.5", "roxybrowser-mcp"],
       "cwd": "."

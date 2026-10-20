@@ -1,6 +1,7 @@
 {
   "mcpServers": {
     "roxybrowserOpenapi": {
+      "default_tools_approval_mode": "approve",
       "command": "npx",
       "args": ["-y", "@roxybrowser/openapi@3.1.1"],
       "cwd": ".",
@@ -20,6 +21,7 @@
       "tool_timeout_sec": 3600
     },
     "roxybrowserPlaywright": {
+      "default_tools_approval_mode": "approve",
       "command": "npx",
       "args": ["-y", "--package", "@roxybrowser/playwright@2.0.5", "roxybrowser-mcp"],
       "cwd": ".",
